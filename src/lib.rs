@@ -52,10 +52,10 @@ use std::io::{Read, Write};
 
 pub use internal::{ErrorKind, Error, Result, serialized_size, serialized_size_bounded};
 
-/// A Deserializer that uses LittleEndian byteorder
-pub type Deserializer<R, S> = internal::Deserializer<R, S, byteorder::LittleEndian>;
-/// A Serializer that uses LittleEndian byteorder
-pub type Serializer<W> = internal::Serializer<W, byteorder::LittleEndian>;
+/// A Deserializer that uses BigEndian byteorder
+pub type Deserializer<R, S> = internal::Deserializer<R, S, byteorder::BigEndian>;
+/// A Serializer that uses BigEndian byteorder
+pub type Serializer<W> = internal::Serializer<W, byteorder::BigEndian>;
 
 /// Deserializes a slice of bytes into an object.
 ///
@@ -65,7 +65,7 @@ pub fn deserialize<'a, T>(bytes: &'a [u8]) -> internal::Result<T>
 where
     T: serde_crate::de::Deserialize<'a>,
 {
-    internal::deserialize::<_, byteorder::LittleEndian>(bytes)
+    internal::deserialize::<_, byteorder::BigEndian>(bytes)
 }
 
 /// Deserializes an object directly from a `Buffer`ed Reader.
@@ -83,7 +83,7 @@ where
     T: serde_crate::de::DeserializeOwned,
     S: SizeLimit,
 {
-    internal::deserialize_from::<_, _, _, byteorder::LittleEndian>(reader, size_limit)
+    internal::deserialize_from::<_, _, _, byteorder::BigEndian>(reader, size_limit)
 }
 
 /// Serializes an object directly into a `Writer`.
@@ -104,7 +104,7 @@ where
     T: serde_crate::Serialize,
     S: SizeLimit,
 {
-    internal::serialize_into::<_, _, _, byteorder::LittleEndian>(writer, value, size_limit)
+    internal::serialize_into::<_, _, _, byteorder::BigEndian>(writer, value, size_limit)
 }
 
 /// Serializes a serializable object into a `Vec` of bytes.
@@ -116,7 +116,7 @@ where
     T: serde_crate::Serialize,
     S: SizeLimit,
 {
-    internal::serialize::<_, _, byteorder::LittleEndian>(value, size_limit)
+    internal::serialize::<_, _, byteorder::BigEndian>(value, size_limit)
 }
 
 /// A limit on the amount of bytes that can be read or written.
